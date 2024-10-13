@@ -1,0 +1,51 @@
+{
+  "name": "vite-plugin-auto-import-styles",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Auto import css/sass/less for your code",
+  "author": "Qinghuan <qinghuanhu@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Asaki-M/vite-plugin-auto-import-styles#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asaki-M/vite-plugin-auto-import-styles.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Asaki-M/vite-plugin-auto-import-styles/issues"
+  },
+  "keywords": [
+    "vite",
+    "auto-import",
+    "vite-plugin"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format cjs,esm",
+    "dev": "npm run build --watch",
+    "typecheck": "tsc"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3",
+    "tsup": "^8.2.4",
+    "vite": "^5.4.4"
+  }
+}
