@@ -13,14 +13,14 @@ import { slash } from './util'
 const stylesExtList = ['.css', '.scss', '.less']
 const specialExtList = ['.vue', '.svelte'], jsxExtList = ['.jsx', '.tsx', '.js', '.ts']
 
-async function scanDirSameNameComponent(dir: string, search: string): Promise<SameNameComponentOptions | null> {
+async function scanDirSameNameComponent(dir: string, search: SameNameComponentOptions): Promise<SameNameComponentOptions | null> {
   const result = await fg(`${slash(dir)}/*.*`)
 
   let componentData = null
   result.forEach(item => {
     const extname = path.extname(item)
     const basename = path.basename(item, extname)
-    if (search === basename) {
+    if (search.base === basename && search.ext !== extname) {
       componentData = {
         ext: extname,
         base: basename
@@ -34,6 +34,9 @@ async function scanDirSameNameComponent(dir: string, search: string): Promise<Sa
 function injectImportStyle(styleInfo: ImportStyleOptions, componentData: SameNameComponentOptions) {
   const cmpPath = path.join(styleInfo.dir, `${componentData.base}${componentData.ext}`)
   const cmpContent = fs.readFileSync(cmpPath, 'utf-8')
+
+  let updatedCMPContent = cmpContent
+
   if (specialExtList.includes(componentData.ext)) {
     const isVue = componentData.ext === '.vue'
     const importStatement = `@import './${styleInfo.base}${styleInfo.ext}';`
@@ -41,31 +44,47 @@ function injectImportStyle(styleInfo: ImportStyleOptions, componentData: SameNam
     if (!cmpContent.includes('<style')) {
       const styleMeta = isVue ? `<style scoped lang="${styleInfo.ext.slice(1)}">` : `<style lang="${styleInfo.ext.slice(1)}">`
       const styleBlock = `\n\n${styleMeta}\n${importStatement}\n</style>\n`
-      const updatedCMPContent = cmpContent + styleBlock;
-      fs.writeFileSync(cmpPath, updatedCMPContent)
+      updatedCMPContent = cmpContent + styleBlock;
 
     } else if (!cmpContent.includes(importStatement)) {
-      const updatedCMPContent = cmpContent.replace(/<style.*?>/, `$&\n${importStatement}`)
-      fs.writeFileSync(cmpPath, updatedCMPContent)
+      updatedCMPContent = cmpContent.replace(/<style.*?>/, `$&\n${importStatement}`)
 
     }
   } else if (jsxExtList.includes(componentData.ext)) {
+    const importRegex = /import\s+.*?from\s+['"].*?['"];?/g;
+    const styleBlock = `import styles from './${styleInfo.base}${styleInfo.ext}'`
 
+    if (!cmpContent.includes(styleBlock)) {
+      const matches = cmpContent.match(importRegex)
+      if (!matches) {
+        updatedCMPContent = styleBlock + '\n' + cmpContent
+
+      } else {
+        const lastImportStatement = matches[matches.length - 1]
+        updatedCMPContent = cmpContent.replace(lastImportStatement, lastImportStatement + '\n' + styleBlock);
+
+      }
+    }
   }
+
+  fs.writeFileSync(cmpPath, updatedCMPContent)
 }
 
 function unlinkImportStyle(styleInfo: ImportStyleOptions, componentData: SameNameComponentOptions) {
   const cmpPath = path.join(styleInfo.dir, `${componentData.base}${componentData.ext}`)
   const cmpContent = fs.readFileSync(cmpPath, 'utf-8')
 
+  let updatedCMPContent = cmpContent
   if (specialExtList.includes(componentData.ext)) {
     const importStatement = `@import './${styleInfo.base}${styleInfo.ext}';`
-    const updatedCMPContent = cmpContent.replace(importStatement, '')
-    fs.writeFileSync(cmpPath, updatedCMPContent)
+    updatedCMPContent = cmpContent.replace(importStatement, '')
 
   } else if (jsxExtList.includes(componentData.ext)) {
-
+    const importStatement = `import styles from './${styleInfo.base}${styleInfo.ext}'`
+    updatedCMPContent = cmpContent.replace(importStatement, '')
   }
+
+  fs.writeFileSync(cmpPath, updatedCMPContent)
 }
 
 function VitepluginAutoImportStyles(options: AutoImportStylesOptions = {}): Plugin {
@@ -78,7 +97,7 @@ function VitepluginAutoImportStyles(options: AutoImportStylesOptions = {}): Plug
         if (stylesExtList.includes(extname)) {
           const dirname = path.dirname(filepath)
           const basename = path.basename(filepath, extname)
-          const hasComponent = await scanDirSameNameComponent(dirname, basename)
+          const hasComponent = await scanDirSameNameComponent(dirname, { base: basename, ext: extname })
 
           if (hasComponent) {
             injectImportStyle({ dir: dirname, ext: extname, base: basename }, hasComponent)
@@ -91,7 +110,7 @@ function VitepluginAutoImportStyles(options: AutoImportStylesOptions = {}): Plug
         if (stylesExtList.includes(extname)) {
           const dirname = path.dirname(filepath)
           const basename = path.basename(filepath, extname)
-          const hasComponent = await scanDirSameNameComponent(dirname, basename)
+          const hasComponent = await scanDirSameNameComponent(dirname, { base: basename, ext: extname })
 
           if (hasComponent) {
             unlinkImportStyle({ dir: dirname, ext: extname, base: basename }, hasComponent)
