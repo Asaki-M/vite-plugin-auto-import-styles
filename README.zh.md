@@ -1,20 +1,21 @@
 # vite-plugin-auto-import-styles
 ---
 
-[中文](./README.zh.md)
+[English](./README.md)
 
-This plugin can auto import style file for your same name code. If you delete or rename the same name style file that can auto remove import statement.
 
-Support css / sass / less for vue / svelte / js / jsx.
+该插件可以自动导入同目录下同名样式文件，删除或者改名样式文件可以自动移除导入语句.
 
-Like:
+支持 css / sass / less 等样式文件，可用于 vue / svelte / js / jsx
+
+如:
 ```
 ├── pages
 │   ├── home
 │   │   └── index.vue
 ```
 
-New create style file in `pages/home/index.scss`
+创建样式文件 `pages/home/index.scss`
 
 ```vue
 // index.vue
@@ -27,13 +28,13 @@ New create style file in `pages/home/index.scss`
 
 
 <style scoped lang="scss">
-@import './index.scss'; // plugin auto import
+@import './index.scss'; // 自动导入
 
 </style>
 
 ```
 
-## Usage
+## 用法
 
 ```
 pnpm install vite-plugin-auto-import-styles
