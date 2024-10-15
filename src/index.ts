@@ -8,7 +8,7 @@ import {
   SameNameComponentOptions,
   ImportStyleOptions,
 } from './types'
-import { slash } from './util'
+import { slash, escapeRegExp } from './util'
 
 const stylesExtList = ['.css', '.scss', '.less']
 const specialExtList = ['.vue', '.svelte'], jsxExtList = ['.jsx', '.tsx', '.js', '.ts']
@@ -76,12 +76,14 @@ function unlinkImportStyle(styleInfo: ImportStyleOptions, componentData: SameNam
 
   let updatedCMPContent = cmpContent
   if (specialExtList.includes(componentData.ext)) {
-    const importStatement = `@import './${styleInfo.base}${styleInfo.ext}';`
-    updatedCMPContent = cmpContent.replace(importStatement, '')
+    const importStatement = `@import './${styleInfo.base}${styleInfo.ext}'`
+    const importRegex = new RegExp(`(\r\n|\n)${escapeRegExp(importStatement)};`, 'g');
+    updatedCMPContent = cmpContent.replace(importRegex, '')
 
   } else if (jsxExtList.includes(componentData.ext)) {
     const importStatement = `import styles from './${styleInfo.base}${styleInfo.ext}'`
-    updatedCMPContent = cmpContent.replace(importStatement, '')
+    const importRegex = new RegExp(`(\r\n|\n)${escapeRegExp(importStatement)};?`, 'g');
+    updatedCMPContent = cmpContent.replace(importRegex, '')
   }
 
   fs.writeFileSync(cmpPath, updatedCMPContent)
