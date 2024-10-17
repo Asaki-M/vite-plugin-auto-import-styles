@@ -1,5 +1,6 @@
 export interface AutoImportStylesOptions {
   dir?: string | string[]
+  showWarnLogs?: boolean
 }
 
 export interface SameNameComponentOptions {

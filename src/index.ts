@@ -103,7 +103,11 @@ function VitepluginAutoImportStyles(options: AutoImportStylesOptions = {}): Plug
 
           if (hasComponent) {
             injectImportStyle({ dir: dirname, ext: extname, base: basename }, hasComponent)
+          } else {
+            !!options?.showWarnLogs && console.warn('[vite-plugin-auto-import-styles]: Can not find the same name component.')
           }
+        } else {
+          !!options?.showWarnLogs && console.warn('[vite-plugin-auto-import-styles]: Not match styles file. Only support css / sass / less.')
         }
       })
 

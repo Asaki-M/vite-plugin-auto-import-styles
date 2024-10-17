@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-auto-import-styles",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Auto import css/sass/less for your code",
   "author": "Qinghuan <qinghuanhu@gmail.com>",
   "license": "MIT",
