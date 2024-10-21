@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-auto-import-styles",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Auto import css/sass/less for your code",
   "author": "Qinghuan <qinghuanhu@gmail.com>",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --dts --format cjs,esm",
+    "build": "tsup src/index.ts --dts --format cjs,esm --shims",
     "dev": "npm run build --watch",
     "typecheck": "tsc"
   },

@@ -93,6 +93,7 @@ function VitepluginAutoImportStyles(options: AutoImportStylesOptions = {}): Plug
 
   return {
     name: 'vite-plugin-auto-import-styles',
+    apply: 'serve',
     configureServer(server) {
       server.watcher.on('add', async (filepath) => {
         const extname = path.extname(filepath)
