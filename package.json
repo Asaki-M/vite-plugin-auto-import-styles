@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-auto-import-styles",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Auto import css/sass/less for your code",
   "author": "Qinghuan <qinghuanhu@gmail.com>",
   "license": "MIT",
@@ -26,13 +26,20 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./nuxt": {
+      "import": {
+        "types": "./dist/nuxt.d.mts",
+        "default": "./dist/nuxt.mjs"
+      },
+      "require": {
+        "types": "./dist/nuxt.d.cts",
+        "default": "./dist/nuxt.cjs"
+      }
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "unbuild",
+    "build": "rimraf dist && unbuild",
     "dev": "npm run build --watch",
     "typecheck": "tsc"
   },
@@ -45,6 +52,7 @@
   "devDependencies": {
     "@nuxt/kit": "^3.14.0",
     "@types/node": "^22.7.5",
+    "rimraf": "^6.0.1",
     "tsup": "^8.2.4",
     "typescript": "^5.6.3",
     "unbuild": "^2.0.0",

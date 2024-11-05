@@ -51,3 +51,18 @@ export default defineConfig({
 })
 
 ```
+
+Use in nuxt
+
+```js
+import { resolve } from 'path'
+import VitepluginAutoImportStyles from 'vite-plugin-auto-import-styles/nuxt'
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  plugins: [VitepluginAutoImportStyles()],
+  devtools: { enabled: true },
+  pages: true
+})
+
+```
