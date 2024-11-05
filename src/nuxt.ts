@@ -1,12 +1,12 @@
 import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
-import VitepluginAutoImportStyles from '.'
+import AutoImportStyles from '.'
 
 export default defineNuxtModule({
   meta: {
-    name: 'vite-plugin-inspect',
-    configKey: 'inspect',
+    name: 'vite-plugin-auto-import-styles',
+    configKey: 'auto-import-styles',
   },
-  setup(options) {
-    addVitePlugin(() => VitepluginAutoImportStyles(options))
+  setup() {
+    addVitePlugin(() => AutoImportStyles())
   },
 }) as any

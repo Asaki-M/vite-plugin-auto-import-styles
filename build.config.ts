@@ -19,4 +19,5 @@ export default defineBuildConfig({
       respectExternal: true,
     },
   },
+  failOnWarn: false
 })

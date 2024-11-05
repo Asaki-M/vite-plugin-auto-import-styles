@@ -1,0 +1,19 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.14.0",
+    "vite-plugin-asset": "^1.0.0",
+    "vite-plugin-auto-import-styles": "workspace:*",
+    "vue": "latest",
+    "vue-router": "latest"
+  }
+}
